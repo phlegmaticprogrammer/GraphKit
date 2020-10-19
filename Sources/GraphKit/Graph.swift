@@ -29,7 +29,7 @@ public struct Graph<T> {
         self.nodes = nodes
     }
         
-    public mutating func add(element : T) -> NodeIndex {
+    public mutating func add(_ element : T) -> NodeIndex {
         let node = Node(element: element, successors: [])
         let index = nodes.count
         nodes.append(node)
@@ -49,7 +49,7 @@ public struct Graph<T> {
         return nodes[node].successors
     }
     
-    public subscript(node : NodeIndex) -> T {
+    public subscript(_ node : NodeIndex) -> T {
         return nodes[node].element
     }
         
@@ -99,7 +99,7 @@ public struct Graph<T> {
         var tree = Graph<(depth : Int, node : NodeIndex)>()
         for (index, s) in state.enumerated() {
             guard let s = s else { continue }
-            let newNodeIndex = tree.add(element: (depth: s.depth, node: index))
+            let newNodeIndex = tree.add((depth: s.depth, node: index))
             relabel[index] = newNodeIndex
         }
         for (index, s) in state.enumerated() {
@@ -140,7 +140,7 @@ public struct Graph<T> {
         var tree = Graph<(distance : Float, node : NodeIndex)>()
         for (index, s) in state.enumerated() {
             guard let s = s else { continue }
-            let newNodeIndex = tree.add(element: (distance: s.distance, node: index))
+            let newNodeIndex = tree.add((distance: s.distance, node: index))
             relabel[index] = newNodeIndex
         }
         for (index, s) in state.enumerated() {
@@ -375,4 +375,41 @@ public struct Graph<T> {
         return components
     }
 
+}
+
+extension Graph where T : Hashable {
+        
+    public func indexOf(_ elem : T) -> NodeIndex? {
+        var i = 0
+        while i < nodes.count {
+            if nodes[i].element == elem { return i }
+            i += 1
+        }
+        return nil
+    }
+    
+    public mutating func ensureVertex(_ elem : T) -> NodeIndex {
+        if let index = indexOf(elem) {
+            return index
+        } else {
+            return add(elem)
+        }
+    }
+    
+    public mutating func connect(from : T, to : T) {
+        let fromIndex = ensureVertex(from)
+        let toIndex = ensureVertex(to)
+        connect(from: fromIndex, to: toIndex)
+    }
+    
+    public mutating func connect(_ node1 : T, _ node2 : T) {
+        let fromIndex = ensureVertex(node1)
+        let toIndex = ensureVertex(node2)
+        connect(fromIndex, toIndex)
+    }
+        
+    public subscript(_ elements : Set<NodeIndex>) -> Set<T> {
+        Set(elements.map { i in self[i] })
+    }
+        
 }
