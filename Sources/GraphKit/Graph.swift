@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Graph<Vertex : Hashable> : GrowableDirectedGraph {
+public struct Graph<Vertex : Hashable> : GrowableDirectedGraph, Hashable {
 
     public struct Iterator : IteratorProtocol {
         
@@ -66,3 +66,5 @@ public struct Graph<Vertex : Hashable> : GrowableDirectedGraph {
     }
     
 }
+
+extension Graph : Codable where Vertex : Codable {}
