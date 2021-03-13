@@ -21,7 +21,7 @@ public protocol GrowableDirectedGraph : DirectedGraph {
 
 public extension GrowableDirectedGraph {
     
-    init<G : GrowableDirectedGraph>(_ other : G) where G.Vertex == Vertex {
+    init<G : DirectedGraph>(_ other : G) where G.Vertex == Vertex {
         self.init()
         insert(other)
         for v in other {

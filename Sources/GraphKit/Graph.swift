@@ -44,6 +44,7 @@ public struct Graph<Vertex : Hashable> : GrowableDirectedGraph, Hashable {
         return _successors.count
     }
     
+    @discardableResult
     public mutating func insert<S>(_ vertices: S) -> Bool where S : Sequence, Self.Element == S.Element {
         var changed = false
         for v in vertices {
@@ -55,6 +56,7 @@ public struct Graph<Vertex : Hashable> : GrowableDirectedGraph, Hashable {
         return changed
     }
     
+    @discardableResult
     public mutating func connect<S>(from: Vertex, to: S) -> Bool where S : Sequence, Self.Element == S.Element {
         var changed = insert(to + [from])
         var succs = _successors[from]!
