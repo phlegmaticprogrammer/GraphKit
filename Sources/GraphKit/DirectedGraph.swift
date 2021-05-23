@@ -66,4 +66,35 @@ public extension DirectedGraph {
         }
     }
     
+    func roots() -> Set<Vertex> {
+        var roots = Set(self)
+        for v in self {
+            for w in successors(of: v) {
+                let _ = roots.remove(w)
+            }
+        }
+        return roots
+    }
+    
+    func topologicalSort() -> [Vertex]? {
+        guard cyclicVertices().count == 0 else { return nil }
+        
+        var visited : Set<Vertex> = []
+        var discovered : [Vertex] = []
+        
+        func dfs(from : Vertex) {
+            guard visited.insert(from).inserted else { return }
+            discovered.append(from)
+            for vertex in successors(of: from) {
+                dfs(from: vertex)
+            }
+        }
+        
+        for vertex in roots() {
+            dfs(from: vertex)
+        }
+
+        return discovered
+    }
+    
 }
