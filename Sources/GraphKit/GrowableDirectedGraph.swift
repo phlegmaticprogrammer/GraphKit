@@ -77,6 +77,27 @@ public extension GrowableDirectedGraph {
         return reversed
     }
     
+    @discardableResult
+    mutating func transitiveHull() -> Bool {
+        func step() -> Bool {
+            var changed = false
+            for v in self {
+                let succs = successors(of: v)
+                for succ in succs {
+                    if connect(from: v, to: successors(of: succ)) {
+                        changed = true
+                    }
+                }
+            }
+            return changed
+        }
+        var changed = false
+        while step() {
+            changed = true
+        }
+        return changed
+    }
+    
 }
 
 
